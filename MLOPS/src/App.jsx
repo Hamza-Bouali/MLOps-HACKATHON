@@ -104,7 +104,7 @@ function App() {
         </header>
         <div className='min-h-full w-full md:w-4/5 sm:w-4/5 lg:w-3/5'>
           {messages.length > 0 && (
-            <div className='p-4 self-end align-text-bottom w-full overflow-y-auto '>
+            <div className='p-4 self-end align-text-bottom w-full overflow-y-auto mb-3 '>
 
               {messages.map((message, index) => (
                 <span key={index}>
@@ -158,7 +158,7 @@ function App() {
 
             type="text"
             placeholder="Enter your name"
-            className={`p-2 border-2 focus mt05 color-gray-300 w-full md:w-3/5 mb-3 bg-claudeBackground border-orange-30  rounded-3xl mb-3 focus:outline-none text-blue-950 border-stone-400 focus:border-stone-600 hover:shadow-xl  `}
+            className={`p-2 border-2 focus mt05 color-gray-300 w-full md:w-3/5  bg-claudeBackground border-orange-30  rounded-3xl mb-3 focus:outline-none text-blue-950 border-stone-400 focus:border-stone-600 hover:shadow-xl  `}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
           />
