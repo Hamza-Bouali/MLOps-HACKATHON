@@ -1,15 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 import Image from './assets/hercule.png';
 import User from './assets/user.png';
 
+
+
 function App() {
   const [inputState, setInputState] = useState('');
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [error, setError] = useState(null);
+
+  const [image, setImageUrl] = useState('');
+  const handleInsertImage = async () => {
+    try {
+      // Fetch the image URL from an API
+      const response = await fetch('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/-4.956411324556053,34.03148079579513,16,0,0/1280x1280?access_token=pk.eyJ1IjoibW91YWRlbm5hIiwiYSI6ImNseDB1dTlzMTA0ZHAyanF4bHpkcXN1ZWYifQ.LZPFuOLYykPmI3es9aKyig');
+      const data = await response.json();
+      // Set the image URL when the user requests it
+      setImageUrl('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/-4.956411324556053,34.03148079579513,16,0,0/1280x1280?access_token=pk.eyJ1IjoibW91YWRlbm5hIiwiYSI6ImNseDB1dTlzMTA0ZHAyanF4bHpkcXN1ZWYifQ.LZPFuOLYykPmI3es9aKyig'); // Replace with the actual key from the API response
+    } catch (error) {
+      console.error('Error fetching image URL:', error);
+    }
+  };
+
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          setError(error.message);
+        }
+      );
+    } else {
+      setError('Geolocation is not supported by this browser.');
+    }
+  };
+
   const [color, setColor] = useState('bg-claudeBackground');
   /*const [textColor, setTextColor] = useState('text-white');*/
   const [bubbleColor, setBubbleColor] = useState('bg-claudeBubble');
   const [chats, setChats] = useState(0);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(  [{'actor':'user','content':'hi'},{'actor':'bot','content':'hello chof m3ak a','image':'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/-4.956411324556053,34.03148079579513,16,0,0/1280x1280?access_token=pk.eyJ1IjoibW91YWRlbm5hIiwiYSI6ImNseDB1dTlzMTA0ZHAyanF4bHpkcXN1ZWYifQ.LZPFuOLYykPmI3es9aKyig'}]  );
+
   const [loading, setLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [FAQ, setFAQ] = useState([{'Question': 'What is Antaeus?', 'Answer': 'Antaeus is a chatbot that helps you with your queries.'}, {'Question': 'How can I use Antaeus?', 'Answer': 'You can use Antaeus by typing your queries in the chatbox.'},{
@@ -29,7 +66,8 @@ function App() {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && e.target.value !== '') {
       console.log('Enter was pressed');
-      setMessages([...messages, e.target.value]);
+      
+      setMessages([...messages, {'actor':'user','content':e.target.value},{'actor':'bot','content':'now i understand 5odlk tswira','image':'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/-4.956411324556053,34.03148079579513,16,0,0/1280x1280?access_token=pk.eyJ1IjoibW91YWRlbm5hIiwiYSI6ImNseDB1dTlzMTA0ZHAyanF4bHpkcXN1ZWYifQ.LZPFuOLYykPmI3es9aKyig'}]);
       e.target.value = '';
       setInputState('');
     }
@@ -37,6 +75,8 @@ function App() {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+    getLocation() ;
+    console.log('the location:',location );
   };
 
   useEffect(() => {
@@ -65,32 +105,32 @@ function App() {
         <div className='min-h-full w-full md:w-4/5 sm:w-4/5 lg:w-3/5'>
           {messages.length > 0 && (
             <div className='p-4 self-end align-text-bottom w-full overflow-y-auto '>
+
               {messages.map((message, index) => (
                 <span key={index}>
-                  <div className=' flex justify-end items-center mb-8 '>
-                    <div className={`${bubbleColor} p-3 rounded-lg   shadow-lg text-gray-800 text-lg max-w-xl sm:max-w-fit text-wrap break-words `}>
-                      <p>{message}</p>
+                  {message['actor'] === 'user' ? 
+                  (<div className=' flex justify-end items-center mb-8 '>
+                    <div className={`${bubbleColor} p-3 rounded-lg shadow-lg text-gray-800 text-lg max-w-xl sm:max-w-fit text-wrap break-words `}>
+                      <p>{message.content}</p>
                     </div>
                     <span> <img src={User} className='rounded-md' width={50} height={50} /> </span>
-                  </div>
-                  <div className=' flex justify-start items-center mb-8 '>
+                  </div>) :
+                  (<div className=' flex justify-start items-center mb-8 '>
                     <span> <img src={Image} width={50} height={50} /> </span>
-                    <div className={`${bubbleColor} max-w-xl shadow-md text-gray-800 text-wrap break-words p-3  rounded-lg text-lg`}>
-                      <p>{  
-                        message
-                        }</p>
+                    <div>
+                    <div className={`${bubbleColor} max-w-xl shadow-md text-gray-800 text-wrap break-words p-3 rounded-lg text-lg`}>
+                      <p>{message.content}</p>
                     </div>
-                  </div>
-                </span>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-          )}
-        </div>
-        <div className={`md:mb-72 ${messages.length === 0 ? '' : 'hidden'} flex-col justify-center items-center `}>
-          <img src={Image} width={180} height={180} className='self-center mx-auto' />
-          <div className='flex sm:flex-col md:flex-row gap-2'>
-            {FAQ.map((faq, index) => (
+                    <div className={`${bubbleColor} max-w-xl shadow-md text-gray-800 text-wrap break-words p-3 rounded-lg text-lg`}>
+                      {message['image'] && <img src={message['image']} width={200} height={200} className='rounded-md' />}
+                    </div>
+                    </div>
+                  </div>)
+               
+                      }
+               </span>))}
+
+> {(()
               <div className="max-w-sm rounded-lg overflow-hidden shadow-lg hover:shadow-2xl hover:transform hover:-translate-y-2 ease-in-out duration-150  " key={index} onClick={handleFAQ}>
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{FAQ[index]['Question']}</div>
