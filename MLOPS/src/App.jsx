@@ -45,7 +45,7 @@ function App() {
   /*const [textColor, setTextColor] = useState('text-white');*/
   const [bubbleColor, setBubbleColor] = useState('bg-claudeBubble');
   const [chats, setChats] = useState(0);
-  const [messages, setMessages] = useState(  [{'actor':'user','content':'hi'},{'actor':'bot','content':'hello chof m3ak a','image':'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/-4.956411324556053,34.03148079579513,16,0,0/1280x1280?access_token=pk.eyJ1IjoibW91YWRlbm5hIiwiYSI6ImNseDB1dTlzMTA0ZHAyanF4bHpkcXN1ZWYifQ.LZPFuOLYykPmI3es9aKyig'}]  );
+  const [messages, setMessages] = useState(  [{'actor':'user','content':'hi'},{'actor':'bot','content':'hello chof m3ak had l3iba','image':'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/-4.956411324556053,34.03148079579513,16,0,0/1280x1280?access_token=pk.eyJ1IjoibW91YWRlbm5hIiwiYSI6ImNseDB1dTlzMTA0ZHAyanF4bHpkcXN1ZWYifQ.LZPFuOLYykPmI3es9aKyig'}]  );
 
   const [loading, setLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -129,8 +129,14 @@ function App() {
                
                       }
                </span>))}
-
-> {(()
+              <div ref={messagesEndRef} />
+            </div>
+          )}
+        </div>
+        <div className={`md:mb-72 ${messages.length === 0 ? '' : 'hidden'} flex-col justify-center items-center `}>
+          <img src={Image} width={180} height={180} className='self-center mx-auto' />
+          <div className='flex sm:flex-col md:flex-row gap-2'>
+            {FAQ.map((faq, index) => (
               <div className="max-w-sm rounded-lg overflow-hidden shadow-lg hover:shadow-2xl hover:transform hover:-translate-y-2 ease-in-out duration-150  " key={index} onClick={handleFAQ}>
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{FAQ[index]['Question']}</div>
