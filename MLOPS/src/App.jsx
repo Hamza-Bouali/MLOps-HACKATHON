@@ -63,15 +63,32 @@ function App() {
     console.log('Input state changed:', inputState);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = async (e) => {
     if (e.key === 'Enter' && e.target.value !== '') {
       console.log('Enter was pressed');
-      
-      setMessages([...messages, {'actor':'user','content':e.target.value},{'actor':'bot','content':'now i understand 5odlk tswira','image':'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/-4.956411324556053,34.03148079579513,16,0,0/1280x1280?access_token=pk.eyJ1IjoibW91YWRlbm5hIiwiYSI6ImNseDB1dTlzMTA0ZHAyanF4bHpkcXN1ZWYifQ.LZPFuOLYykPmI3es9aKyig'}]);
-      e.target.value = '';
-      setInputState('');
+  
+      try {
+        const response = await fetch('https://09b1-34-83-200-89.ngrok-free.app/chat', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ 'prompt': e.target.value })
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+  
+        const result = await response.json();
+        setMessages([...messages, { 'actor': 'user', 'content': e.target.value }, { 'actor': 'bot', 'content': result.response, 'image': result.image }]);
+        console.log("Chat Response:", result);
+      } catch (error) {
+        console.error("Error fetching chat response:", error);
+      }
     }
-  };
+  }
+  
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
