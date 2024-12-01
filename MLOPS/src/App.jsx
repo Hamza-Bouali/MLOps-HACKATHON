@@ -104,7 +104,7 @@ function App() {
         </header>
         <div className='min-h-full w-full md:w-4/5 sm:w-4/5 lg:w-3/5'>
           {messages.length > 0 && (
-            <div className='p-4 self-end align-text-bottom w-full overflow-y-auto mb-3 '>
+            <div className='p-4 self-end align-text-bottom w-full overflow-y-auto mb-5 '>
 
               {messages.map((message, index) => (
                 <span key={index}>
